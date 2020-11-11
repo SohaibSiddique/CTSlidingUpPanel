@@ -220,11 +220,16 @@ public class CTBottomSlideController : NSObject, UIGestureRecognizerDelegate
     
     //MARK: init
     private func reinitBottomController(with size:CGSize){
-        let extrasHeight = UIApplication.shared.statusBarFrame.height +
-            (self.navigationController?.navigationBar.frame.height ?? 0)
         
-        expectedHeight = size.height - extrasHeight;
-        self.anchorPointInPixels = expectedHeight * (1 - lastSetAnchor);
+        let statusBarHeight = UIApplication.shared.statusBarFrame.height
+        let navigationBarHeight = self.navigationController?.navigationBar.frame.height ?? 0
+        let searchBarHeight:CGFloat = 52 // Search Bar Height in Navigation Bar
+        
+        //        let extrasHeight = UIApplication.shared.statusBarFrame.height +
+        //            (self.navigationController?.navigationBar.frame.height ?? 0)
+        let extrasHeight = statusBarHeight + navigationBarHeight + searchBarHeight
+        expectedHeight = self.view.bounds.size.height - extrasHeight;
+        originalConstraint = (self.view.bounds.size.height - extrasHeight - visibleHeight - (self.tabBarController?.tabBar.frame.size.height ?? 0));
         heightConstraint.constant = expectedHeight;
         
         if(currentState == .expanded){
